@@ -5,3 +5,4 @@ langchain_community~=0.3.24
 python-dotenv~=1.1.0
 pyyaml~=6.0.2
 langgraph~=0.4.8
+pyjokes~=0.8.3
