@@ -17,7 +17,6 @@ Week 5 introduces the core building blocks of agentic systems and prepares you f
 ```txt
 rt-agentic-ai-cert-week5/
 ├── code/
-│   ├── pyjokes_example/                # Basic LangGraph example (non-LLM agent with conditional routing)
 │   ├── custom_tools.py                 # Custom tool implementations for Lesson 3b
 │   ├── llm.py                          # LLM utility wrapper (for later use in LangGraph or agents)
 │   ├── paths.py                        # Standardized file path management
