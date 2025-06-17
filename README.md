@@ -17,21 +17,24 @@ Week 5 introduces the core building blocks of agentic systems and prepares you f
 ```txt
 rt-agentic-ai-cert-week5/
 ├── code/
-│   ├── custom_tools.py                 # Custom tool implementations for Lesson 3b
-│   ├── llm.py                          # LLM utility wrapper (for later use in LangGraph or agents)
-│   ├── paths.py                        # Standardized file path management
-│   ├── run_wk5_l2b_example.py          # Lesson 2b: Run simple LangGraph example using pyjokes agent
-│   ├── run_wk5_l3b_custom_tools.py     # Lesson 3b: Run agent with custom tools
-│   └── utils.py                        # Common utilities
+│   ├── custom_tools.py                         # Custom tool implementations for Lesson 3b
+│   ├── llm.py                                  # LLM utility wrapper
+│   ├── paths.py                                # Standardized file path management
+│   ├── prompt_builder.py                       # Modular prompt construction functions
+│   ├── run_wk5_l2b_pyjokes_joke_bot.py         # Lesson 2b: Run joke-bot using pyjokes
+│   ├── run_wk5_l2c_llm_joke_bot.py             # Lesson 2c: Run joke-bot using ai agents
+│   ├── run_wk5_l3b_custom_tools.py             # Lesson 3b: Run agent with custom tools
+│   └── utils.py                                # Common utilities
 ├── config/
-│   └── config.yaml                     # Configuration file for tool registration or agent setup
+│   ├── config.yaml                             # Configuration file for tool registration or agent setup
+│   └── prompt_config.yaml                      # Prompt configurations for agents
 ├── outputs/
-│   └── graph.png                       # Example LangGraph visualization
-├── .env.example                        # Sample environment variable file (e.g., Groq API key)
+│   └── graph.png                               # Example LangGraph visualization
+├── .env.example                                # Sample environment variable file (e.g., Groq API key)
 ├── .gitignore
 ├── LICENSE
-├── README.md                           # You are here
-└── requirements.txt                    # Required Python dependencies
+├── README.md                                   # You are here
+└── requirements.txt                            # Required Python dependencies
 ```
 
 ---
@@ -42,7 +45,7 @@ rt-agentic-ai-cert-week5/
 
 - Introduces how to define nodes, edges, and a shared state object.
 - Example: A minimal **non-LLM agent** using the `pyjokes` library to route actions.
-- Main script: `run_wk5_l2b_example.py`
+- Main script: `run_wk5_l2b_pyjokes_joke_bot.py`
 
 ### **Lesson 3b – Building Custom Tools**
 
