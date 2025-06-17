@@ -121,7 +121,7 @@ def main():
 
     # Create the graph
     app = create_graph()
-    visualize_graph(app, os.path.join(OUTPUTS_DIR, "graph.png"))
+    # visualize_graph(app, os.path.join(OUTPUTS_DIR, "graph.png"))
 
     # Display available tools
     tool_registry = create_tool_registry()
