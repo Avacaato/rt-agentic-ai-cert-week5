@@ -4,7 +4,7 @@ from langgraph.graph.state import CompiledStateGraph
 
 from run_wk5_l2b_pyjokes_joke_bot import (
     Joke,
-    JokeState as BaseJokeState,
+    JokeState,
     show_menu,
     exit_bot,
     route_choice,
@@ -17,7 +17,7 @@ from paths import PROMPT_CONFIG_FILE_PATH
 
 # ========== Extended State ==========
 
-class JokeState(BaseJokeState):
+class AgenticJokeState(JokeState):
     latest_joke: str = ""
     approved: bool = False
     retry_count: int = 0
@@ -29,31 +29,31 @@ prompt_cfg = load_config(PROMPT_CONFIG_FILE_PATH)
 
 # ========== Writer–Critic Nodes ==========
 
-def writer_node(state: JokeState) -> dict:
+def writer_node(state: AgenticJokeState) -> dict:
     config = prompt_cfg["joke_writer_cfg"]
     prompt = build_prompt_from_config(config, input_data="", app_config=None)
     prompt += f"\\n\\nThe category is: {state.category}"
     response = llm.invoke(prompt)
     return {"latest_joke": response.content}
 
-def critic_node(state: JokeState) -> dict:
+def critic_node(state: AgenticJokeState) -> dict:
     config = prompt_cfg["joke_critic_cfg"]
     prompt = build_prompt_from_config(config, input_data=state.latest_joke, app_config=None)
     decision = llm.invoke(prompt).content.strip().lower()
     approved = "yes" in decision
     return {"approved": approved, "retry_count": state.retry_count + 1}
 
-def show_final_joke(state: JokeState) -> dict:
+def show_final_joke(state: AgenticJokeState) -> dict:
     joke = Joke(text=state.latest_joke, category=state.category)
     print_joke(joke)
     return {"jokes": [joke], "retry_count": 0, "approved": False, "latest_joke": ""}
 
-def writer_critic_router(state: JokeState) -> str:
+def writer_critic_router(state: AgenticJokeState) -> str:
     if state.approved or state.retry_count >= 5:
         return "show_final_joke"
     return "writer"
 
-def update_category(state: JokeState) -> dict:
+def update_category(state: AgenticJokeState) -> dict:
     categories = ["dad developer", "chuck norris developer", "general"]
     emoji_map = {
         "knock-knock": "🚪",
@@ -88,7 +88,7 @@ def update_category(state: JokeState) -> dict:
 # ========== Graph Assembly ==========
 
 def build_joke_graph() -> CompiledStateGraph:
-    builder = StateGraph(JokeState)
+    builder = StateGraph(AgenticJokeState)
 
     builder.add_node("show_menu", show_menu)
     builder.add_node("update_category", update_category)
@@ -126,7 +126,7 @@ def main():
     print("\\n🎭 Starting joke bot with writer–critic LLM loop...")
     graph = build_joke_graph()
     # print(graph.get_graph().draw_mermaid())
-    final_state = graph.invoke(JokeState(category="dad developer"), config={"recursion_limit": 200})
+    final_state = graph.invoke(AgenticJokeState(category="dad developer"), config={"recursion_limit": 200})
     print("\\n✅ Done. Final Joke Count:", len(final_state["jokes"]))
 
 if __name__ == "__main__":
