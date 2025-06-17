@@ -47,6 +47,14 @@ rt-agentic-ai-cert-week5/
 - Example: A minimal **non-LLM agent** using the `pyjokes` library to route actions.
 - Main script: `run_wk5_l2b_pyjokes_joke_bot.py`
 
+### **Lesson 2c – Introducing Agentic Behavior with a Writer-Critic Loop**
+
+- Extend the previous joke bot to use LLMs for joke generation and evaluation
+- Introduce agentic workflows: generation → reflection → refinement
+- LangSmith is automatically enabled for traceability and debugging
+- Categories include: dad developer, chuck norris developer, knock-knock, general
+- 📄 Main script: `run_wk5_l2c_llm_joke_bot.py`
+
 ### **Lesson 3b – Building Custom Tools**
 
 - Demonstrates how to define and register custom tools for agent use.
@@ -79,19 +87,6 @@ rt-agentic-ai-cert-week5/
    ```
 
    You can get your API key from [Groq](https://console.groq.com/).
-
----
-
-## Coming Soon
-
-This week will include more lessons and example scripts as we cover:
-
-- When to use agents vs. static pipelines
-- LangSmith integration for observability
-- Built-in tools and toolkits
-- Multi-agent system design patterns in LangGraph
-
-Check back as we progressively add lessons and walkthroughs to this repo.
 
 ---
 
