@@ -9,3 +9,4 @@ DATA_DIR = os.path.join(ROOT_DIR, "data")
 CONFIG_DIR = os.path.join(ROOT_DIR, "config")
 
 CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, "config.yaml")
+PROMPT_CONFIG_FILE_PATH = os.path.join(CONFIG_DIR, "prompt_config.yaml")
