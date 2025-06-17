@@ -10,6 +10,7 @@ from langgraph.graph.state import CompiledStateGraph
 # Define State
 # ===================
 
+
 class Joke(BaseModel):
     text: str
     category: str
@@ -19,6 +20,7 @@ class JokeState(BaseModel):
     """
     Represents the evolving state of the joke bot.
     """
+
     jokes: Annotated[List[Joke], add] = []  # Using built-in add operator
     jokes_choice: Literal["n", "c", "q"] = "n"  # next, change, quit
     category: str = "neutral"
@@ -29,6 +31,7 @@ class JokeState(BaseModel):
 # ===================
 # Utilities
 # ===================
+
 
 def get_user_input(prompt: str) -> str:
     return input(prompt).strip().lower()
@@ -58,6 +61,7 @@ def print_category_menu():
 # Define Nodes
 # ===================
 
+
 def show_menu(state: JokeState) -> dict:
     print_menu_header(state.category, len(state.jokes))
     print("Pick an option:")
@@ -82,13 +86,13 @@ def fetch_joke(state: JokeState) -> dict:
 def update_category(state: JokeState) -> dict:
     categories = ["neutral", "chuck", "all"]
     print_category_menu()
-    
+
     for i, cat in enumerate(categories):
         emoji = "🎯" if cat == "neutral" else "🥋" if cat == "chuck" else "🌟"
         print(f"    {i}. {emoji} {cat.upper()}")
-    
+
     print("=" * 60)
-    
+
     try:
         selection = int(get_user_input("    Enter category number: "))
         if 0 <= selection < len(categories):
@@ -129,6 +133,7 @@ def route_choice(state: JokeState) -> str:
 # Build Graph
 # ===================
 
+
 def build_joke_graph() -> CompiledStateGraph:
     workflow = StateGraph(JokeState)
 
@@ -149,7 +154,7 @@ def build_joke_graph() -> CompiledStateGraph:
             "fetch_joke": "fetch_joke",
             "update_category": "update_category",
             "exit_bot": "exit_bot",
-        }
+        },
     )
 
     # Define transitions
@@ -164,6 +169,7 @@ def build_joke_graph() -> CompiledStateGraph:
 # Main Entry
 # ===================
 
+
 def main():
     print("\n" + "🎉" + "=" * 58 + "🎉")
     print("    WELCOME TO THE LANGGRAPH JOKE BOT!")
@@ -174,7 +180,7 @@ def main():
 
     # print("\n📊 === MERMAID DIAGRAM ===")
     # print(graph.get_graph().draw_mermaid())
-    
+
     print("\n" + "🚀" + "=" * 58 + "🚀")
     print("    STARTING JOKE BOT SESSION...")
     print("=" * 60)
@@ -184,7 +190,9 @@ def main():
     print("\n" + "🎊" + "=" * 58 + "🎊")
     print("    SESSION COMPLETE!")
     print("=" * 60)
-    print(f"    📈 You enjoyed {len(final_state.get('jokes', []))} jokes during this session!")
+    print(
+        f"    📈 You enjoyed {len(final_state.get('jokes', []))} jokes during this session!"
+    )
     print(f"    📂 Final category: {final_state.get('category', 'unknown').upper()}")
     print("    🙏 Thanks for using the LangGraph Joke Bot!")
     print("=" * 60 + "\n")
