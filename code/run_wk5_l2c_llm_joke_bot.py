@@ -49,7 +49,7 @@ def show_final_joke(state: JokeState) -> dict:
     return {"jokes": [joke], "retry_count": 0, "approved": False, "latest_joke": ""}
 
 def writer_critic_router(state: JokeState) -> str:
-    if state.approved or state.retry_count >= 3:
+    if state.approved or state.retry_count >= 5:
         return "show_final_joke"
     return "writer"
 
