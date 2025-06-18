@@ -3,29 +3,8 @@ import shutil
 import zipfile
 import requests
 from typing import List
+from paths import DATA_DIR
 from langchain_core.tools import tool
-
-
-@tool
-def env_content(dir_path: str) -> str:
-    """Read and return the content of a .env file from a specified directory.
-
-    This tool searches through the given directory path and its subdirectories
-    to find a .env file and returns its complete content. Useful for examining
-    environment variables and configuration settings.
-
-    Args:
-        dir_path: The directory path to search for .env file (must be a local path, not URL)
-
-    Returns:
-        The complete content of the .env file as a string, or None if not found
-    """
-    for dir, _, files in os.walk(dir_path):
-        for file in files:
-            if file == ".env":
-                with open(os.path.join(dir, file), "r") as f:
-                    return f.read()
-    return None
 
 
 @tool
@@ -33,7 +12,7 @@ def download_and_extract_repo(repo_url: str) -> str:
     """Download a Git repository and extract it to a local directory.
 
     This tool downloads a Git repository as a ZIP file from GitHub or similar
-    platforms and extracts it to a './repo' directory. It handles both 'main'
+    platforms and extracts it to a './data/repo' directory. It handles both 'main'
     and 'master' branch repositories automatically. If the repo directory
     already exists, it will be removed and replaced with the new download.
 
@@ -43,7 +22,7 @@ def download_and_extract_repo(repo_url: str) -> str:
     Returns:
         The path to the extracted repository directory if successful, or False if failed
     """
-    output_dir = "./repo"
+    output_dir = os.path.join(DATA_DIR, "repo")
     try:
         if os.path.exists(output_dir):
             print(f"Repository already exists in {output_dir}, removing it")
@@ -131,6 +110,28 @@ def download_and_extract_repo(repo_url: str) -> str:
         if os.path.exists(output_dir):
             shutil.rmtree(output_dir)
         return False
+
+
+@tool
+def env_content(dir_path: str) -> str:
+    """Read and return the content of a .env file from a specified directory.
+
+    This tool searches through the given directory path and its subdirectories
+    to find a .env file and returns its complete content. Useful for examining
+    environment variables and configuration settings.
+
+    Args:
+        dir_path: The directory path to search for .env file (must be a local path, not URL)
+
+    Returns:
+        The complete content of the .env file as a string, or None if not found
+    """
+    for dir, _, files in os.walk(dir_path):
+        for file in files:
+            if file == ".env":
+                with open(os.path.join(dir, file), "r") as f:
+                    return f.read()
+    return None
 
 
 def get_all_tools() -> List:
