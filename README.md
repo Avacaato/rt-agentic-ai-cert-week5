@@ -23,7 +23,7 @@ rt-agentic-ai-cert-week5/
 │   ├── prompt_builder.py                       # Modular prompt construction functions
 │   ├── run_wk5_l2b_pyjokes_joke_bot.py         # Lesson 2b: Run joke-bot using pyjokes
 │   ├── run_wk5_l2c_llm_joke_bot.py             # Lesson 2c: Run joke-bot using ai agents
-│   ├── run_wk5_l3b_custom_tools.py             # Lesson 3b: Run agent with custom tools
+│   ├── run_wk5_l4b_custom_tools.py             # Lesson 4b: Run agent with custom tools
 │   └── utils.py                                # Common utilities
 ├── config/
 │   ├── config.yaml                             # Configuration file for tool registration or agent setup
