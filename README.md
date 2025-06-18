@@ -55,11 +55,11 @@ rt-agentic-ai-cert-week5/
 - Categories include: dad developer, chuck norris developer, knock-knock, general
 - 📄 Main script: `run_wk5_l2c_llm_joke_bot.py`
 
-### **Lesson 3b – Building Custom Tools**
+### **Lesson 4b – Building Custom Tools**
 
 - Demonstrates how to define and register custom tools for agent use.
 - Tool functions are defined in `custom_tools.py`.
-- Main script: `run_wk5_l3b_custom_tools.py`
+- Main script: `run_wk5_l4b_custom_tools.py`
 
 ---
 
