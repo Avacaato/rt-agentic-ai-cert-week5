@@ -5,14 +5,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GPT_4O_MINI = ChatOpenAI(model="gpt-4o-mini")
-LLAMA_3_8B_8192 = ChatGroq(model="llama3-8b-8192")
-
-llms = {
-    "gpt-4o-mini": GPT_4O_MINI,
-    "llama3-8b-8192": LLAMA_3_8B_8192,
-}
-
-
-def get_llm(model_name: str) -> BaseChatModel:
-    return llms[model_name]
+def get_llm(model_name: str, temperature: float = 0.7) -> BaseChatModel:
+    if model_name == "gpt-4o-mini":
+        return ChatOpenAI(model="gpt-4o-mini", temperature=temperature)
+    elif model_name == "llama3-8b-8192":
+        return ChatGroq(model="llama3-8b-8192", temperature=temperature)
+    else:
+        raise ValueError(f"Unknown model name: {model_name}")
