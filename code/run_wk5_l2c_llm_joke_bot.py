@@ -24,7 +24,8 @@ class AgenticJokeState(JokeState):
 
 # ========== LLM Setup ==========
 
-llm = get_llm("gpt-4o-mini")
+writer_llm = get_llm("gpt-4o-mini", temperature=0.9)
+critic_llm = get_llm("gpt-4o-mini", temperature=0.0)
 prompt_cfg = load_config(PROMPT_CONFIG_FILE_PATH)
 
 # ========== Writer–Critic Nodes ==========
@@ -33,13 +34,13 @@ def writer_node(state: AgenticJokeState) -> dict:
     config = prompt_cfg["joke_writer_cfg"]
     prompt = build_prompt_from_config(config, input_data="", app_config=None)
     prompt += f"\\n\\nThe category is: {state.category}"
-    response = llm.invoke(prompt)
+    response = writer_llm.invoke(prompt)
     return {"latest_joke": response.content}
 
 def critic_node(state: AgenticJokeState) -> dict:
     config = prompt_cfg["joke_critic_cfg"]
     prompt = build_prompt_from_config(config, input_data=state.latest_joke, app_config=None)
-    decision = llm.invoke(prompt).content.strip().lower()
+    decision = critic_llm.invoke(prompt).content.strip().lower()
     approved = "yes" in decision
     return {"approved": approved, "retry_count": state.retry_count + 1}
 
