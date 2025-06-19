@@ -1,4 +1,3 @@
-import os
 from typing import Dict, Any, Annotated
 from typing_extensions import TypedDict
 from langchain.schema import HumanMessage, SystemMessage
@@ -8,7 +7,6 @@ from dotenv import load_dotenv
 from custom_tools import get_all_tools
 from langchain_core.messages import ToolMessage
 from langchain_core.runnables.graph import MermaidDrawMethod
-from paths import OUTPUTS_DIR
 from llm import get_llm
 from utils import load_config
 
@@ -121,7 +119,6 @@ def main():
 
     # Create the graph
     app = create_graph()
-    # visualize_graph(app, os.path.join(OUTPUTS_DIR, "graph.png"))
 
     # Display available tools
     tool_registry = create_tool_registry()
