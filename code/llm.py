@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
 def get_llm(model_name: str, temperature: float = 0.7) -> BaseChatModel:
     if model_name == "gpt-4o-mini":
         return ChatOpenAI(model="gpt-4o-mini", temperature=temperature)
