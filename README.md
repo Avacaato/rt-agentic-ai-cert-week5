@@ -10,7 +10,6 @@ Week 5 introduces the core building blocks of agentic systems and prepares you f
 - The fundamentals of **LangGraph** and how to structure applications as stateful graphs.
 - The role of **LangSmith** in debugging, tracing, and evaluating agent runs.
 - Built-in and **custom tool development** for dynamic agent behavior.
-- An early look at **multi-agent systems** before diving deeper in Week 6.
 
 ## Repository Structure
 
