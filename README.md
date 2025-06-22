@@ -101,4 +101,4 @@ This project is licensed under the MIT License – see the [LICENSE](LICENSE) fi
 
 - Email: contact at readytensor dot com
 - Issues & Contributions: Open an issue or PR on this repo
-- Website: [https://readytensor.com](https://readytensor.com)
+- Website: [https://readytensor.ai](https://readytensor.ai)
