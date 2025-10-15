@@ -22,7 +22,7 @@ class JokeState(BaseModel):
     """
 
     jokes: Annotated[List[Joke], add] = []  # Using built-in add operator
-    jokes_choice: Literal["n", "c", "q"] = "n"  # next, change, quit
+    jokes_choice: Literal["n", "c", "l", "r", "q"] = "n"  # next, change, language, reset, quit
     category: str = "neutral"
     language: str = "en"
     quit: bool = False
@@ -66,14 +66,45 @@ def show_menu(state: JokeState) -> dict:
     print_menu_header(state.category, len(state.jokes))
     print("Pick an option:")
     user_input = get_user_input(
-        "[n] 🎭 Next Joke  [c] 📂 Change Category  [q] 🚪 Quit\nUser Input: "
+        "[n] 🎭 Next Joke  [c] 📂 Change Category [l] 🌐 Change Language [r] 🔁 Reset History [q] 🚪 Quit\nUser Input: "
     )
-    while user_input not in ["n", "c", "q"]:
+    valid_choices = ["n", "c", "l", "r","q"]
+    while user_input not in valid_choices:
         print("❌ Invalid input. Please try again.")
         user_input = get_user_input(
-            "[n] 🎭 Next Joke  [c] 📂 Change Category  [q] 🚪 Quit\n    User Input: "
+            "[n] 🎭 Next Joke  [c] 📂 Change Category [l] 🌐 Change Language [r] 🔁 Reset History [q] 🚪 Quit\n    User Input: "
         )
     return {"jokes_choice": user_input}
+
+
+def print_language_menu():
+    """Print Language Selection Menu."""
+    print("🌐" + "=" * 58 + "🌐")
+    print("    LANGUAGE SELECTION")
+    print("=" * 60)
+    languages = [("en", "English"), ("de", "German"), ("es", "Spanish"), 
+                 ("fr", "French"), ("it", "Italian"), ("ja", "Japanese"), 
+                 ("ko", "Korean"), ("pt", "Portuguese"), ("ru", "Russian")]
+    print("    Supported languages include:")
+    for i, (code, lang) in enumerate(languages):
+        print(f"    {i}. {lang} ({code})")
+    print("=" * 60)
+    return [code for code, _ in languages]
+
+def update_language(state: JokeState) -> dict:
+    languages = print_language_menu()
+    try:
+        selection = int(get_user_input("    Enter language number: "))
+        if 0 <= selection < len(languages):
+            selected_language = languages[selection]
+            print(f"    ✅ Language changed to: {selected_language.upper()}")
+            return {"language": selected_language}
+        else:
+            print("    ❌ Invalid choice. Keeping current language.")
+            return {}
+    except ValueError:
+        print("    ❌ Please enter a valid number. Keeping current language.")
+        return {}
 
 
 def fetch_joke(state: JokeState) -> dict:
@@ -105,6 +136,10 @@ def update_category(state: JokeState) -> dict:
     except ValueError:
         print("    ❌ Please enter a valid number. Keeping current category.")
         return {}
+    
+def reset_jokes(state: JokeState) -> dict:
+    print("    🔄 Resetting jokes list.")
+    return {"jokes": []}    
 
 
 def exit_bot(state: JokeState) -> dict:
@@ -123,6 +158,10 @@ def route_choice(state: JokeState) -> str:
         return "fetch_joke"
     elif state.jokes_choice == "c":
         return "update_category"
+    elif state.jokes_choice == "l":
+        return "update_language"
+    elif state.jokes_choice == "r":
+        return "reset_jokes"
     elif state.jokes_choice == "q":
         return "exit_bot"
     else:
@@ -141,6 +180,8 @@ def build_joke_graph() -> CompiledStateGraph:
     workflow.add_node("show_menu", show_menu)
     workflow.add_node("fetch_joke", fetch_joke)
     workflow.add_node("update_category", update_category)
+    workflow.add_node("update_language", update_language)
+    workflow.add_node("reset_jokes", reset_jokes)
     workflow.add_node("exit_bot", exit_bot)
 
     # Set entry point
@@ -148,18 +189,22 @@ def build_joke_graph() -> CompiledStateGraph:
 
     # Routing logic
     workflow.add_conditional_edges(
-        "show_menu",
-        route_choice,
-        {
-            "fetch_joke": "fetch_joke",
-            "update_category": "update_category",
-            "exit_bot": "exit_bot",
-        },
-    )
+    "show_menu",
+    route_choice,
+    {
+        "fetch_joke": "fetch_joke",
+        "update_category": "update_category",
+        "update_language": "update_language",
+        "reset_jokes": "reset_jokes",
+        "exit_bot": "exit_bot",
+    },
+)
 
     # Define transitions
     workflow.add_edge("fetch_joke", "show_menu")
     workflow.add_edge("update_category", "show_menu")
+    workflow.add_edge("update_language", "show_menu")
+    workflow.add_edge("reset_jokes", "show_menu")
     workflow.add_edge("exit_bot", END)
 
     return workflow.compile()
