@@ -12,6 +12,7 @@ from run_wk5_l2b_pyjokes_joke_bot import (
 )
 from prompt_builder import build_prompt_from_config
 from utils import load_config
+from difflib import SequenceMatcher
 from llm import get_llm
 from paths import PROMPT_CONFIG_FILE_PATH
 
@@ -30,14 +31,31 @@ prompt_cfg = load_config(PROMPT_CONFIG_FILE_PATH)
 
 # ========== Writer–Critic Node Factories ==========
 
+def is_similar(joke1, joke2, threshold=0.7):
+    """Check if two jokes are similar based on a similarity threshold."""
+    return SequenceMatcher(None, joke1, joke2).ratio() > threshold
 
 def make_writer_node(writer_llm):
     def writer_node(state: AgenticJokeState) -> dict:
         config = prompt_cfg["joke_writer_cfg"]
         prompt = build_prompt_from_config(config, input_data="", app_config=None)
         prompt += f"\\n\\nThe category is: {state.category}"
-        response = writer_llm.invoke(prompt)
-        return {"latest_joke": response.content}
+
+        max_attempts = 5
+        for _ in range(max_attempts):
+            response = writer_llm.invoke(prompt)
+            candidate_joke = response.content
+
+            if any(is_similar(prev_joke.text, candidate_joke) for prev_joke in state.jokes):
+                print("    ⚠️ Similar joke detected. Generating a new one...")
+            else:
+                print("   ✅ New joke generated.")
+
+            return {"latest_joke": candidate_joke}
+        
+        return {"latest_joke": "Failed to generate a unique joke after several attempts."}
+        # response = writer_llm.invoke(prompt)
+        # return {"latest_joke": response.content}
 
     return writer_node
 
@@ -57,7 +75,7 @@ def make_critic_node(critic_llm):
 
 def show_final_joke(state: AgenticJokeState) -> dict:
     joke = Joke(text=state.latest_joke, category=state.category)
-    print_joke(joke)
+    print_joke(joke, approved=state.approved)
     return {"jokes": [joke], "retry_count": 0, "approved": False, "latest_joke": ""}
 
 
@@ -104,8 +122,8 @@ def update_category(state: AgenticJokeState) -> dict:
 
 
 def build_joke_graph(
-    writer_model: str = "gpt-4o-mini",
-    critic_model: str = "gpt-4o-mini",
+    writer_model: str = "sonar",
+    critic_model: str = "sonar",
     writer_temp: float = 0.95,
     critic_temp: float = 0.1,
 ) -> CompiledStateGraph:

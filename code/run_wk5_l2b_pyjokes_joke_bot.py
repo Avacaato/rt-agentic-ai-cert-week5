@@ -37,11 +37,13 @@ def get_user_input(prompt: str) -> str:
     return input(prompt).strip().lower()
 
 
-def print_joke(joke: Joke):
+def print_joke(joke, approved = False):
     """Print a joke with nice formatting."""
     # print(f"\n📂 CATEGORY: {joke.category.upper()}\n")
     print(f"\n😂 {joke.text}\n")
-    print("=" * 60)
+    approval_msg = "✅ Approved by critic" if approved else "❌ Rejected by critic"
+    print(f"{approval_msg}")
+    print("=" * 60) 
 
 
 def print_menu_header(category: str, total_jokes: int):
@@ -108,7 +110,7 @@ def update_language(state: JokeState) -> dict:
 
 
 def fetch_joke(state: JokeState) -> dict:
-    joke_text = get_joke(language=state.language, category=state.category)
+    joke_text = get_joke(language=state.language, category=state.category)   
     new_joke = Joke(text=joke_text, category=state.category)
     print_joke(new_joke)
     return {"jokes": [new_joke]}  # LangGraph will use the add reducer to append this
