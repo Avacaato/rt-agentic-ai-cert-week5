@@ -1,0 +1,49 @@
+
+    <html>
+    <head>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <script>mermaid.initialize({startOnLoad:true});</script>
+    </head>
+    <body>
+      <div class="mermaid">
+      ---
+config:
+  flowchart:
+    curve: linear
+---
+graph TD;
+	__start__([<p>__start__</p>]):::first
+	show_menu(show_menu)
+	update_category(update_category)
+	exit_bot(exit_bot)
+	reset_jokes(reset_jokes)
+	update_language(update_language)
+	update_critic_type(update_critic_type)
+	writer(writer)
+	critic(critic)
+	show_final_joke(show_final_joke)
+	__end__([<p>__end__</p>]):::last
+	__start__ --> show_menu;
+	critic -.-> show_final_joke;
+	critic -.-> writer;
+	reset_jokes --> show_menu;
+	show_final_joke --> show_menu;
+	show_menu -.-> exit_bot;
+	show_menu -.-> reset_jokes;
+	show_menu -.-> update_category;
+	show_menu -.-> update_critic_type;
+	show_menu -.-> update_language;
+	show_menu -. &nbsp;fetch_joke&nbsp; .-> writer;
+	update_category --> show_menu;
+	update_critic_type --> show_menu;
+	update_language --> show_menu;
+	writer --> critic;
+	exit_bot --> __end__;
+	classDef default fill:#f2f0ff,line-height:1.2
+	classDef first fill-opacity:0
+	classDef last fill:#bfb6fc
+
+      </div>
+    </body>
+    </html>
+    
