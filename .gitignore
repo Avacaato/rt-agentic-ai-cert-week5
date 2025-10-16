@@ -17,6 +17,7 @@ __pycache__/
 .env
 .venv
 env/
+joke_bot_graph.mmd
 venv/
 ENV/
 env.bak/
